@@ -74,7 +74,8 @@ This project is licensed under the MIT License.
 ---
 
 ## 📧 Contact
-Created by Prateek ("https://github.com/iamprathetic")  
+Created by Prateek ("https://github.com/iamprathetic")
+Email: prateekjha240@gmail.com
 Feel free to reach out for collaboration or suggestions!
 ```
 

@@ -1,0 +1,53 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  // SQLite used for MVP as discussed. To use Postgres, change 'sqlite' to 'postgresql' and update the url.
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model User {
+  id        Int      @id @default(autoincrement())
+  username  String   @unique
+  email     String   @unique
+  password  String
+  rating    Int      @default(1200)
+  wins      Int      @default(0)
+  losses    Int      @default(0)
+  
+  matchesAsPlayer1 Match[] @relation("Player1Matches")
+  matchesAsPlayer2 Match[] @relation("Player2Matches")
+  matchesWon       Match[] @relation("MatchWinner")
+  
+  createdAt DateTime @default(now())
+}
+
+model Problem {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  language    String   // "javascript", "python", "typescript"
+  level       Int      // 1-100
+  constraints String
+  testCases   String   // JSON string: [{ input: "...", expectedOutput: "..." }]
+  matches     Match[]
+  createdAt   DateTime @default(now())
+}
+
+model Match {
+  id         Int      @id @default(autoincrement())
+  player1Id  Int
+  player2Id  Int
+  winnerId   Int?
+  problemId  Int
+  status     String   // "IN_PROGRESS", "COMPLETED", "DRAW"
+  
+  player1    User     @relation("Player1Matches", fields: [player1Id], references: [id])
+  player2    User     @relation("Player2Matches", fields: [player2Id], references: [id])
+  winner     User?    @relation("MatchWinner", fields: [winnerId], references: [id])
+  problem    Problem  @relation(fields: [problemId], references: [id])
+  
+  createdAt  DateTime @default(now())
+}
